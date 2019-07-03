@@ -60,9 +60,10 @@ class BuddyIcon(CanvasIcon):
 
         self.__datastore_query()
         self.__tamagotchi_thread()
+        GObject.timeout_add(1000, self.__tamagotchi_thread)
+        GObject.timeout_add(100000, self.__datastore_query)
 
     def __tamagotchi_thread(self):
-        GObject.timeout_add(1000, self.__tamagotchi_thread)
 
         user_type = None
         disk_space_type = None
@@ -88,7 +89,6 @@ class BuddyIcon(CanvasIcon):
         self.set_icon_name(self.icon_dict[user_type][disk_space_type])
 
     def __datastore_query(self):
-        GObject.timeout_add(100000, self.__datastore_query)
         test, entries = datastore.find({})
         self.journal_entries = entries
 
