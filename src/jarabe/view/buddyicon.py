@@ -13,12 +13,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import gi
+from gi.repository import GObject
+
 from sugar3.graphics import style
 from sugar3.graphics.icon import CanvasIcon
+from sugar3 import env
+from sugar3.datastore import datastore
 
 from jarabe.view.buddymenu import BuddyMenu
 from jarabe.util.normalize import normalize_string
 
+import os
+import statvfs
 
 _FILTERED_ALPHA = 0.33
 
@@ -33,11 +40,80 @@ class BuddyIcon(CanvasIcon):
         self._buddy = buddy
         self._buddy.connect('notify::present', self.__buddy_notify_present_cb)
         self._buddy.connect('notify::color', self.__buddy_notify_color_cb)
+        self.props.badge_name = 'computer-xo'
 
         self.palette_invoker.props.toggle_palette = True
         self.palette_invoker.cache_palette = False
 
         self._update_color()
+        self.journal_entries = 0
+
+        self.icon_dict = {'embryo': {'normal': 'embryo-test',
+                                     'disk_50': 'embryo-disk50',
+                                     'disk_90': 'embryo-disk90'},
+                          'teen': {'normal': 'teen',
+                                   'disk_50': 'teen-disk50',
+                                   'disk_90': 'teen-disk90'},
+                          'adult': {'normal': 'computer-xo',
+                                    'disk_50': 'adult-disk50',
+                                    'disk_90': 'adult-disk90'}
+                          }
+
+        self.__datastore_query()
+        self.__tamagotchi_thread()
+        self.__status_tooltip_thread()
+
+    def __status_tooltip_thread(self):
+        GObject.timeout_add(10000, self.__status_tooltip_thread)
+        disk_usage = (self.used * 100) / self.total
+        tooltip_str = str(disk_usage) + "% Disk space used"
+        self.set_tooltip_text(tooltip_str)
+
+    def __tamagotchi_thread(self):
+        GObject.timeout_add(1000, self.__tamagotchi_thread)
+
+        user_type = None
+        disk_space_type = None
+        _, self.total, self.used = self._get_space()
+
+        if self.journal_entries <= 10:
+            user_type = 'embryo'
+        elif self.journal_entries > 10 and self.journal_entries <= 50:
+            user_type = 'teen'
+        elif self.journal_entries >= 50:
+            user_type = 'adult'
+
+        diskspace_50 = int(self.total / 2)
+        diskspace_90 = int((90 * self.total) / 100)
+
+        if self.used > diskspace_90:
+            disk_space_type = 'disk_90'
+        elif self.used > diskspace_50:
+            disk_space_type = 'disk_50'
+        else:
+            disk_space_type = 'normal'
+
+        self.set_icon_name(self.icon_dict[user_type][disk_space_type])
+
+    def __datastore_query(self):
+        GObject.timeout_add(100000, self.__datastore_query)
+        test, entries = datastore.find({})
+        self.journal_entries = entries
+
+    def _get_space(self):
+        stat = os.statvfs(env.get_profile_path())
+        free_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BAVAIL]
+        total_space = stat[statvfs.F_BSIZE] * stat[statvfs.F_BLOCKS]
+
+        free_space = self._get_MBs(free_space)
+        total_space = self._get_MBs(total_space)
+        used_space = total_space - free_space
+
+        return free_space, total_space, used_space
+
+    def _get_MBs(self, space):
+        space = space / (1024 * 1024)
+        return space
 
     def create_palette(self):
         palette = BuddyMenu(self._buddy)
