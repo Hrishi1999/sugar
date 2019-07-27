@@ -69,32 +69,6 @@ class DashboardView(Gtk.ScrolledWindow):
                            'application/epub+zip', 'text/html',
                            'application/x-pdf']
 
-        # toolbar with the new toolbar redesign
-        # toolbar_box = ToolbarBox()
-
-        # activity_button = ActivityToolbarButton(self)
-        # toolbar_box.toolbar.insert(activity_button, 0)
-        # activity_button.show()
-
-        # refresh_button = ToolButton('view-refresh')
-        # refresh_button.set_tooltip_text(_("Refresh Data"))
-        # refresh_button.connect('clicked', self._load_data)
-        # toolbar_box.toolbar.insert(refresh_button, -1)
-        # refresh_button.show()
-
-        # separator = Gtk.SeparatorToolItem()
-        # separator.props.draw = False
-        # separator.set_expand(True)
-        # toolbar_box.toolbar.insert(separator, -1)
-        # separator.show()
-
-        # stop_button = StopButton(self)
-        # toolbar_box.toolbar.insert(stop_button, -1)
-        # stop_button.show()
-
-        # self.set_toolbar_box(toolbar_box)
-        # toolbar_box.show()
-
         # Detect if device is a XO
         if os.path.exists('/etc/olpc-release') or \
            os.path.exists('/sys/power/olpc-pm'):
@@ -199,7 +173,7 @@ class DashboardView(Gtk.ScrolledWindow):
         self.eventbox.modify_bg(Gtk.StateType.NORMAL, Gdk.color_parse("white"))
         self.eventbox.add(self.charts_area)
         self.vbox_pie.pack_start(self.eventbox, True, True, 0)
-        self.eventbox.connect('button-press-event', self._pie_opened)
+        # self.eventbox.connect('button-press-event', self._pie_opened)
         self.charts_area.set_tooltip_text(_("Click for more information"))
 
         # pie chart window
@@ -428,11 +402,10 @@ class DashboardView(Gtk.ScrolledWindow):
 
             # get number of activities installed
             registry = bundleregistry.get_registry()
-            
+
             self.label_total_activities.set_text(str(len(registry)))
             self.label_journal_entries.set_text(str(self.journal_entries))
             self.label_contribs.set_text(str(len(self.files_list)))
-
 
     def _pie_opened(self, widget, event):
         self.window.show()
