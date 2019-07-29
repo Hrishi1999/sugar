@@ -336,10 +336,10 @@ class JournalActivity(JournalWindow):
         self._dashboard_holder.show_all()
         self._dashboard_holder.pack_start(self._dashboard_view, True, True, 0)
 
-    def _refresh_clicked_cb(self, i, index):
+    def _refresh_clicked_cb(self, i):
         self._dashboard_view._load_data()
 
-    def _journal_clicked_cb(self, i, index):
+    def _journal_clicked_cb(self, i):
         self.set_canvas(self._main_view)
         self.set_toolbar_box(self._main_toolbox)
         self._main_toolbox._dashboard_button.props.active = False
@@ -514,7 +514,7 @@ class JournalActivity(JournalWindow):
         self.set_canvas(self._secondary_view)
         self._secondary_view.show()
 
-    def _show_dashboard_view(self, i, index):
+    def _show_dashboard_view(self, i):
         self._active_view = JournalViews.DASHBOARD
         if self.canvas != self._dashboard_holder:
             self.set_canvas(self._dashboard_holder)

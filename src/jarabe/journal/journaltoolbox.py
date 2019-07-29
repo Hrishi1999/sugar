@@ -78,7 +78,7 @@ class MainToolbox(ToolbarBox):
 
     __gsignals__ = {
         'dashboard-clicked': (GObject.SignalFlags.RUN_FIRST, None,
-                              (int,)),
+                              ([])),
     }
 
     query_changed_signal = GObject.Signal('query-changed',
@@ -495,7 +495,7 @@ class MainToolbox(ToolbarBox):
         self._update_if_needed()
 
     def _dashboard_clicked_cb(self, dashboard_button):
-        self.emit('dashboard-clicked', 0)
+        self.emit('dashboard-clicked')
 
     def __favorite_button_toggled_cb(self, favorite_button):
         self._update_if_needed()
@@ -789,9 +789,9 @@ class DashboardToolBox(ToolbarBox):
 
     __gsignals__ = {
         'refresh-clicked': (GObject.SignalFlags.RUN_FIRST, None,
-                            (int,)),
+                            ([])),
         'journal-clicked': (GObject.SignalFlags.RUN_FIRST, None,
-                            (int,)),
+                            ([])),
     }
 
     def __init__(self):
@@ -810,10 +810,10 @@ class DashboardToolBox(ToolbarBox):
         self.show()
 
     def _load_data(self, widget=None):
-        self.emit('refresh-clicked', 0)
+        self.emit('refresh-clicked')
 
     def _journal_clicked_cb(self, widget=None):
-        self.emit('journal-clicked', 0)
+        self.emit('journal-clicked')
 
 
 class EditToolbox(ToolbarBox):
