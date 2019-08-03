@@ -10,4 +10,4 @@ sugar_PYTHON =			\
         radial.py                  \
         scatter.py                  \
         stackedbar.py                  \
-        utils.py                  \
+        utils.py                  
