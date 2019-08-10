@@ -340,9 +340,7 @@ class JournalActivity(JournalWindow):
         self._dashboard_view._load_data()
 
     def _journal_clicked_cb(self, i):
-        self.set_canvas(self._main_view)
-        self.set_toolbar_box(self._main_toolbox)
-        self._main_toolbox._dashboard_button.props.active = False
+        self.show_main_view()
 
     def get_add_new_box(self):
         return self._add_new_box
