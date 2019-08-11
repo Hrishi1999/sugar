@@ -340,6 +340,7 @@ class JournalActivity(JournalWindow):
         self._dashboard_view._load_data()
 
     def _journal_clicked_cb(self, i):
+        self._main_toolbox.clear_query()
         self.show_main_view()
 
     def get_add_new_box(self):

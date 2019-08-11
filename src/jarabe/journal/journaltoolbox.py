@@ -532,6 +532,9 @@ class MainToolbox(ToolbarBox):
             self._what_search_button.show()
             self._proj_list_button.props.active = False
 
+        if self._dashboard_button.props.active:
+            self._dashboard_button.props.active = False
+
         self._update_if_needed()
 
 
