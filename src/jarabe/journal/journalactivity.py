@@ -604,7 +604,8 @@ class JournalActivity(JournalWindow):
     def show_journal(self):
         """Become visible and show main view"""
         self.reveal()
-        self.show_main_view()
+        if self._active_view != JournalViews.DASHBOARD:
+            self.show_main_view()
 
     def get_total_number_of_entries(self):
         list_view_model = self.get_list_view().get_model()
